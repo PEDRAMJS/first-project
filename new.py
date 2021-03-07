@@ -1,11 +1,17 @@
 import MySQLdb
 import time
+import concurrent.futures   
 import threading
 import subprocess
 ipl=[]
-quie=[]
 dbcon= MySQLdb.connect(user='pedram',password='321321',host='localhost',database='pedram')
 cur=dbcon.cursor()
+cur.execute('select ip from ip_ping')
+for ipn in cur:
+    d=list(ipn)
+    ipl.append(d[0])
+
+
 class pedram:
     def ipcheck(x):
         print ('=======[CHECKING]====>>>'+x)
@@ -14,11 +20,5 @@ class pedram:
             print ('=========='+' Host is   up '+'==========(@_@)')
         elif res > 0:
             print ('=========='+' Host is down '+'==========(X_X)')   
-        return     
-cur.execute('select ip from ip_ping')
-for ipn in cur:
-    d=list(ipn)
-    ipl.append(d[0])
-for ip in ipl:
-    for x in range(5):
-        threading.Thread(target=pedram.ipcheck(ip))
+        return
+t = threading.Thread(target=pedram.ipcheck(ip))
