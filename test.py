@@ -1,47 +1,32 @@
-import os
-import re
+import MySQLdb
 import time
-import sys
-from threading import Thread
-
-class testit(Thread):
-   def __init__ (self,ip):
-      Thread.__init__(self)
-      self.ip = ip
-      self.status = -1
-   def run(self):
-      pingaling = os.popen("ping -q -c2 "+self.ip,"r")
-      while 1:
-        line = pingaling.readline()
-        if not line: break
-        igot = re.findall(testit.lifeline,line)
-        if igot:
-           self.status = int(igot[0])
-
-testit.lifeline = re.compile(r"(\d) received")
-report = ("No response","Partial Response","Alive")
-
-MAX_PARALLEL = 15
-
-print (time.ctime())
-
-pinglist = []
-top = 254
-
-for host in range(1,top+1):
-   ip = "192.168.200."+str(host)
-   current = testit(ip)
-   pinglist.append(current)
-   current.start()
-
-   waitfor = 0
-   if len(pinglist) > MAX_PARALLEL: waitfor = 1
-   if host == top: waitfor = len(pinglist)
-
-   for reap in range(waitfor):
-       pingle = pinglist[0]
-       pinglist = pinglist[1:]
-       pingle.join()
-       print ("Status from ",pingle.ip,"is",report[pingle.status])
-
-print (time.ctime())
+import concurrent.futures   
+import threading
+import subprocess
+ipl=[]
+Aip=[]
+Xip=[]
+dbcon= MySQLdb.connect(user='pedram',password='321321',host='localhost',database='pedram')
+cur=dbcon.cursor()
+cur.execute('select ip from ip_ping')
+for ipn in cur:
+   d=list(ipn)
+   ipl.append(d[0])
+def ipcheck(x):
+   print ('=======[CHECKING]====>>>'+x)
+   res=subprocess.call(['ping '+x+' -c 5 -W 1'],shell=True,universal_newlines=True,stdout=subprocess.PIPE,)
+   if res ==0:
+      Aip.append(x)
+      print ('=========='+' Host '+x+' is   up '+'==========(@_@)')
+   elif res > 0:
+      Xip.append(x)
+      print ('=========='+' Host '+x+' is down '+'==========(X_X)')   
+   return
+def concurrency():
+   with concurrent.futures.ThreadPoolExecutor() as executor:
+      t1 = executor.map(ipcheck,ipl)
+concurrency()
+print(Xip)
+print('Dead ip')
+print(Aip)
+print('Alive ip')
