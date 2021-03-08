@@ -20,4 +20,9 @@ class pedram:
         elif res > 0:
             print ('=========='+' Host is down '+'==========(X_X)')   
         return
-t = threading.Thread(target=pedram.ipcheck(ip))
+for ip in ipl:
+    t = threading.(target=pedram.ipcheck(ip))
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+    t1 = executor.map(ipcheck,ipl)                           #
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
