@@ -1,5 +1,4 @@
 import MySQLdb
-import time
 import concurrent.futures   
 import threading
 import subprocess
