@@ -23,6 +23,18 @@ class pedram:
          print ('=========='+' Host '+x+' is down '+'==========(X_X)') 
 
 
+   def ipcheck2(x2):
+      for every in x2:
+         print ('=======[CHECKING]====>>>'+x)
+         res=subprocess.call(['ping '+x+' -c 5 -W 1'],shell=True,universal_newlines=True,stdout=subprocess.PIPE,)
+         if res ==0:
+            Aip.append(x)
+            print ('=========='+' Host '+x+' is   up '+'==========(@_@)')
+         elif res > 0:
+            Xip.append(x)
+            print ('=========='+' Host '+x+' is down '+'==========(X_X)') 
+
+
    for ipn in cur:
       d=list(ipn)
       ipl.append(d[0])

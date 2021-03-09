@@ -7,7 +7,7 @@ print(ipl2)
 while c < 1 :
     if len(ipl2) < 5:
         ipl2.append(ipl[b])
-        b= b + 1
+        b = b + 1
     if b == 5 :
         ipl=[]
         ipl2=[]
